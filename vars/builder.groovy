@@ -17,7 +17,7 @@ class builder implements Serializable {
         $class: 'BuildDiscarderProperty',
         strategy: [
           $class: 'LogRotator',
-          numToKeepStr: 10,
+          numToKeepStr: buildsToKeep,
         ],
       ],
     ]
@@ -29,7 +29,7 @@ class builder implements Serializable {
         $class: 'BuildDiscarderProperty',
         strategy: [
           $class: 'LogRotator',
-          numToKeepStr: 10,
+          numToKeepStr: buildsToKeep,
         ],
       ],
       [
