@@ -11,19 +11,42 @@ class builder implements Serializable {
   private def script = null, env = null
   private gcloudInstalled = false
 
-  def init(script, buildsToKeep='10') {
-    this.@script = script
-    this.env = script.env
-
-    this.script.properties([
-      [
-        $class: 'BuildDiscarderProperty',
-        strategy: [
-          $class: 'LogRotator',
-          numToKeepStr: buildsToKeep,
-        ],
+  def configDefault(buildsToKeep='10') {
+    [
+      $class: 'BuildDiscarderProperty',
+      strategy: [
+        $class: 'LogRotator',
+        numToKeepStr: 10,
       ],
-    ])
+    ],
+  }
+
+  def configGithubOnCommit(projectUrl, buildsToKeep='10') {
+    [
+      $class: 'BuildDiscarderProperty',
+      strategy: [
+        $class: 'LogRotator',
+        numToKeepStr: 10,
+      ],
+    ],
+    [
+      $class: 'GithubProjectProperty',
+      projectUrlStr: projectUrl,
+    ],
+    [
+      $class: 'GitHubPushTrigger',
+    ],
+  }
+
+  def init(script, buildsToKeep='10') {
+    initConfig(script, configDefault(buildsToKeep))
+  }
+
+  def initConfig(script, props) {
+    this.@script = script
+    this.end = script.env
+
+    this.script.properties(props)
   }
 
   def initGerrit(script, gerritProject, onMerge=false, buildsToKeep='10') {
