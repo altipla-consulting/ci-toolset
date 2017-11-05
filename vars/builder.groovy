@@ -37,7 +37,12 @@ class builder implements Serializable {
         projectUrlStr: projectUrl,
       ],
       [
-        $class: 'GitHubPushTrigger',
+        $class: 'PipelineTriggersJobProperty',
+        triggers: [
+          [
+            $class: 'GitHubPushTrigger',
+          ],
+        ],
       ],
     ]
   }
