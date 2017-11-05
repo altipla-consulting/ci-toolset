@@ -13,29 +13,33 @@ class builder implements Serializable {
 
   def configDefault(buildsToKeep='10') {
     [
-      $class: 'BuildDiscarderProperty',
-      strategy: [
-        $class: 'LogRotator',
-        numToKeepStr: 10,
+      [
+        $class: 'BuildDiscarderProperty',
+        strategy: [
+          $class: 'LogRotator',
+          numToKeepStr: 10,
+        ],
       ],
-    ],
+    ]
   }
 
   def configGithubOnCommit(projectUrl, buildsToKeep='10') {
     [
-      $class: 'BuildDiscarderProperty',
-      strategy: [
-        $class: 'LogRotator',
-        numToKeepStr: 10,
+      [
+        $class: 'BuildDiscarderProperty',
+        strategy: [
+          $class: 'LogRotator',
+          numToKeepStr: 10,
+        ],
       ],
-    ],
-    [
-      $class: 'GithubProjectProperty',
-      projectUrlStr: projectUrl,
-    ],
-    [
-      $class: 'GitHubPushTrigger',
-    ],
+      [
+        $class: 'GithubProjectProperty',
+        projectUrlStr: projectUrl,
+      ],
+      [
+        $class: 'GitHubPushTrigger',
+      ],
+    ]
   }
 
   def init(script, buildsToKeep='10') {
