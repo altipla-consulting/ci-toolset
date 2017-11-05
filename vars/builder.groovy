@@ -48,7 +48,7 @@ class builder implements Serializable {
 
   def initConfig(script, props) {
     this.@script = script
-    this.end = script.env
+    this.env = script.env
 
     this.script.properties(props)
   }
