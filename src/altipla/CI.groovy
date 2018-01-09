@@ -136,9 +136,12 @@ class CI implements Serializable {
     }
   }
 
-  def kubernetes(String deployment, image, List<KubeContainer> containers=null) {
+  def kubernetes(String deployment, image='', List<KubeContainer> containers=null) {
     _installGcloud()
 
+    if (!image) {
+      image = deployment
+    }
     if (!containers) {
       containers = [new KubeContainer(name: deployment)]
     }
