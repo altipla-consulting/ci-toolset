@@ -98,6 +98,11 @@ class CI implements Serializable {
     params.push(type: 'boolean', name: param.name, description: param.description, defaultValue: param.defaultValue)
   }
 
+  def configGerrit(projectName, onMerge=false) {
+    gerritProject = projectName
+    geriitOnMerge = onMerge
+  }
+
   def container(String name, String context='.', String dockerfile='Dockerfile') {
     dockerfile = "${context}/${dockerfile}"
 
