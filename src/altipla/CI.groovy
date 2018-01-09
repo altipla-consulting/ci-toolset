@@ -15,7 +15,7 @@ class CI implements Serializable {
   private def params = []
   private def tag = null
   private def gerritProject = ''
-  private def geriitOnMerge = false
+  private def gerritOnMerge = false
   
   private def gcloudInstalled = false
 
@@ -53,7 +53,7 @@ class CI implements Serializable {
         [$class: 'PluginPatchsetCreatedEvent'],
         [$class: 'PluginDraftPublishedEvent'],
       ]
-      if (geriitOnMerge) {
+      if (gerritOnMerge) {
         events = [
           [$class: 'PluginChangeMergedEvent'],
         ]
@@ -100,7 +100,7 @@ class CI implements Serializable {
 
   def configGerrit(projectName, onMerge=false) {
     gerritProject = projectName
-    geriitOnMerge = onMerge
+    gerritOnMerge = onMerge
   }
 
   def container(String name, String context='.', String dockerfile='Dockerfile') {
