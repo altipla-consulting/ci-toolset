@@ -103,42 +103,16 @@ class CI implements Serializable {
     gerritOnMerge = onMerge
   }
 
-  /**
-   * Build and push a container to an online hub.
-   * @param name Name of the container.
-   * @param context Context to build it. Defaults to the current directory.
-   * @param dockerfile Dockerfile to use inside the context. Defaults to 'Dockerfile'.
-   */
-  def container(Map m) {
-    if (!m.context) {
-      m.context = '.'
-    }
-    if (!m.dockerfile) {
-      m.dockerfile = 'Dockerfile'
-    }
-
-    def c = script.docker.build "${project}/${m.name}", "-f ${m.context}/${m.dockerfile} ${m.context}"
+  def container(String name, String context='.', String dockerfile='Dockerfile') {
+    def c = script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
     script.docker.withRegistry('https://eu.gcr.io', '35e93828-31ad-45fd-90a3-21a3c9dcf332') {
       c.push tag
       c.push 'latest'
     }
   }
 
-  /**
-   * Build the container only without pushing it online.
-   * @param name Name of the container.
-   * @param context Context to build it. Defaults to the current directory.
-   * @param dockerfile Dockerfile to use inside the context. Defaults to 'Dockerfile'.
-   */
-  def containerBuildOnly(Map m) {
-    if (!m.context) {
-      m.context = '.'
-    }
-    if (!m.dockerfile) {
-      m.dockerfile = 'Dockerfile'
-    }
-
-    script.docker.build "${project}/${m.name}", "-f ${m.context}/${m.dockerfile} ${m.context}"
+  def containerBuildOnly(String name, String context='.', String dockerfile='Dockerfile') {
+    script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
   }
 
   def _installGcloud() {
