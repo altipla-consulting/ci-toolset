@@ -200,10 +200,12 @@ class CI implements Serializable {
     this.script.sh "gcloud ${command}"
   }
 
-  def gitTag(tag='') {
+  def gitTag(v='') {
+    def version = v ?: this.tag
+
     this.script.sshagent(['c983ed20-1b6c-41c0-b3c4-8411d7f8c482']) {
-      this.script.sh "git tag -f ${tag}"
-      this.script.sh "git push --force origin refs/tags/${tag}:refs/tags/${tag}"
+      this.script.sh "git tag -f ${version}"
+      this.script.sh "git push --force origin refs/tags/${version}:refs/tags/${version}"
     }
   }
 }
