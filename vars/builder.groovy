@@ -199,12 +199,6 @@ class builder implements Serializable {
     this.script.sh "kubectl patch deployment ${deployment} --patch '${JsonOutput.toJson(patch)}'"
   }
 
-  def applyConfigMap(configMap) {
-    installGcloud()
-
-    this.script.sh "kubectl apply -f ${configMap}'"
-  }
-
   def dockerShell(image, command, volumes=null, environment=null) {
     if (!volumes) {
       volumes = []
