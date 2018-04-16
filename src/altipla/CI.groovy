@@ -165,6 +165,12 @@ class CI implements Serializable {
     script.sh "kubectl patch deployment ${deployment} --patch '${JsonOutput.toJson(patch)}'"
   }
 
+  def applyConfigMap(configMap) {
+    installGcloud()
+
+    this.script.sh "kubectl apply -f ${configMap}'"
+  }
+
   def runContainer(Map container) {
     def args = []
 
