@@ -166,7 +166,7 @@ class CI implements Serializable {
   }
 
   def applyConfigMap(configMap) {
-    installGcloud()
+    _installGcloud()
 
     this.script.sh "kubectl apply -f ${configMap}'"
   }
