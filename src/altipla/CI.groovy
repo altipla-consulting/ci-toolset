@@ -168,7 +168,7 @@ class CI implements Serializable {
   def applyConfigMap(configMap) {
     _installGcloud()
 
-    this.script.sh "kubectl apply -f ${configMap}"
+    script.sh "kubectl apply -f ${configMap}"
   }
 
   def runContainer(Map container) {
@@ -203,15 +203,19 @@ class CI implements Serializable {
 
   def gcloud(command) {
     _installGcloud()
-    this.script.sh "gcloud ${command}"
+    script.sh "gcloud ${command}"
   }
 
   def gitTag(v='') {
-    def version = v ?: this.tag
+    def version = v ?: tag
 
-    this.script.sshagent(['c983ed20-1b6c-41c0-b3c4-8411d7f8c482']) {
-      this.script.sh "git tag -f ${version}"
-      this.script.sh "git push --force origin refs/tags/${version}:refs/tags/${version}"
+    script.sshagent(['c983ed20-1b6c-41c0-b3c4-8411d7f8c482']) {
+      script.sh "git tag -f ${version}"
+      script.sh "git push --force origin refs/tags/${version}:refs/tags/${version}"
     }
+  }
+
+  def buildTag() {
+    tag
   }
 }
