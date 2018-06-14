@@ -118,7 +118,7 @@ class CI implements Serializable {
   }
 
   def containerBuildOnly(String name, String context='.', String dockerfile='Dockerfile') {
-    return script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
+    return script.docker.build("${project}/${name}", "-f ${context}/${dockerfile} ${context}")
   }
 
   def _installGcloud() {
