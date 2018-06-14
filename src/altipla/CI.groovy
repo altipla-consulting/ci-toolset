@@ -109,14 +109,16 @@ class CI implements Serializable {
       c.push tag
       c.push 'latest'
     }
+
+    return c
   }
 
   def container(Map m) {
-    container(m.name, m.get('context', '.'), m.get('dockerfile', 'Dockerfile'))
+    return container(m.name, m.get('context', '.'), m.get('dockerfile', 'Dockerfile'))
   }
 
   def containerBuildOnly(String name, String context='.', String dockerfile='Dockerfile') {
-    script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
+    return script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
   }
 
   def _installGcloud() {
