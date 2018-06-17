@@ -220,4 +220,11 @@ class CI implements Serializable {
   def buildTag() {
     tag
   }
+
+  def authContainers(Closure fn) {
+    _installGcloud()
+    script.docker.withRegistry('https://eu.gcr.io', '35e93828-31ad-45fd-90a3-21a3c9dcf332') {
+      fn()
+    }
+  }
 }
