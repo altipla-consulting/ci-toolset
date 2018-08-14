@@ -1,12 +1,10 @@
 package altipla
 
 import groovy.json.JsonOutput
+
 import java.nio.file.Paths
-import altipla.KubeContainer
-import altipla.DockerVolume
-import altipla.DockerEnv
 
-
+@SuppressWarnings("unused")
 class CI implements Serializable {
   String project, zone, cluster
   int buildsToKeep = 10
@@ -14,10 +12,10 @@ class CI implements Serializable {
   private def script
   private def params = []
   private def tag = null
-  private def gerritProject = ''
-  private def gerritOnMerge = false
+  private def _gerritProject = ''
+  private def _gerritOnMerge = false
   
-  private def gcloudInstalled = false
+  private def _gcloudConfigured = false
 
   def init(scriptRef) {
     script = scriptRef
@@ -48,12 +46,12 @@ class CI implements Serializable {
       ]
     }
 
-    if (gerritProject) {
+    if (_gerritProject) {
       def events = [
         [$class: 'PluginPatchsetCreatedEvent'],
         [$class: 'PluginDraftPublishedEvent'],
       ]
-      if (gerritOnMerge) {
+      if (_gerritOnMerge) {
         events = [
           [$class: 'PluginChangeMergedEvent'],
         ]
@@ -66,11 +64,11 @@ class CI implements Serializable {
               $class: 'GerritTrigger',
               serverName: 'Gerrit Altipla',
               customUrl: "${script.env.BUILD_URL}console",
-              gerritProjects: [
+              _gerritProjects: [
                 [
                   $class: 'GerritProject',
                   compareType: 'PLAIN',
-                  pattern: gerritProject,
+                  pattern: _gerritProject,
                   branches: [
                     [
                       $class: 'Branch',
@@ -99,8 +97,8 @@ class CI implements Serializable {
   }
 
   def configGerrit(projectName, onMerge=false) {
-    gerritProject = projectName
-    gerritOnMerge = onMerge
+    _gerritProject = projectName
+    _gerritOnMerge = onMerge
   }
 
   def container(String name, String context='.', String dockerfile='Dockerfile') {
@@ -114,18 +112,22 @@ class CI implements Serializable {
   }
 
   def container(Map m) {
-    return container(m.name, m.get('context', '.'), m.get('dockerfile', 'Dockerfile'))
+    return container(m.name as String, m.get('context', '.') as String, m.get('dockerfile', 'Dockerfile') as String)
+  }
+
+  def containerBuildOnly(Map m) {
+    return containerBuildOnly(m.name as String, m.get('context', '.') as String, m.get('dockerfile', 'Dockerfile') as String)
   }
 
   def containerBuildOnly(String name, String context='.', String dockerfile='Dockerfile') {
     return script.docker.build("${project}/${name}", "-f ${context}/${dockerfile} ${context}")
   }
 
-  def _installGcloud() {
-    if (gcloudInstalled) {
+  def configureGoogleCloud() {
+    if (_gcloudConfigured) {
       return
     }
-    gcloudInstalled = true
+    _gcloudConfigured = true
 
     script.env.PATH = "/root/google-cloud-sdk/bin:${script.env.PATH}"
 
@@ -138,8 +140,9 @@ class CI implements Serializable {
     }
   }
 
+  @Deprecated
   def kubernetes(String deployment, image='', List<KubeContainer> containers=null) {
-    _installGcloud()
+    configureGoogleCloud()
 
     if (!image) {
       image = deployment
@@ -167,8 +170,9 @@ class CI implements Serializable {
     script.sh "kubectl patch deployment ${deployment} --patch '${JsonOutput.toJson(patch)}'"
   }
 
+  @Deprecated
   def applyConfigMap(configMap) {
-    _installGcloud()
+    configureGoogleCloud()
 
     script.sh "kubectl apply -f ${configMap}"
   }
@@ -198,18 +202,20 @@ class CI implements Serializable {
     script.sh "docker run -t ${args.join(' ')} ${container.image} bash -c \"${container.command}\""
   }
 
+  @Deprecated
   def gsutil(String command) {
-    _installGcloud()
+    configureGoogleCloud()
     script.sh "gsutil ${command}"
   }
 
+  @Deprecated
   def gcloud(command) {
-    _installGcloud()
+    configureGoogleCloud()
     script.sh "gcloud ${command}"
   }
 
-  def gitTag(v='') {
-    def version = v ?: tag
+  def gitTag(String custom='') {
+    def version = custom ?: tag
 
     script.sshagent(['c983ed20-1b6c-41c0-b3c4-8411d7f8c482']) {
       script.sh "git tag -f ${version}"
@@ -221,8 +227,9 @@ class CI implements Serializable {
     tag
   }
 
+  @Deprecated
   def authContainers(Closure fn) {
-    _installGcloud()
+    configureGoogleCloud()
     script.docker.withRegistry('https://eu.gcr.io', '35e93828-31ad-45fd-90a3-21a3c9dcf332') {
       fn()
     }
