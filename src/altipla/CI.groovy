@@ -123,6 +123,20 @@ class CI implements Serializable {
     return script.docker.build("${project}/${name}", "-f ${context}/${dockerfile} ${context}")
   }
 
+  def containerTag(String name, String imageTag, String context='.', String dockerfile='Dockerfile') {
+    def c = script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
+    script.docker.withRegistry('https://eu.gcr.io', '35e93828-31ad-45fd-90a3-21a3c9dcf332') {
+      c.push imageTag
+      c.push 'latest'
+    }
+
+    return c
+  }
+
+  def containerTag(Map m) {
+    return containerTag(m.name as String, m.tag as String, m.get('context', '.') as String, m.get('dockerfile', 'Dockerfile') as String)
+  }
+
   def configureGoogleCloud() {
     if (_gcloudConfigured) {
       return
