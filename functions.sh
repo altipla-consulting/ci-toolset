@@ -26,3 +26,14 @@ function configure-google-cloud {
     run gcloud container clusters get-credentials $GOOGLE_CLUSTER
   fi
 }
+
+
+func docker-build-autotag {
+  run docker build -t container -f $2 $3
+  
+  HASH=$(docker image inspect container -f '{{.Id}}' | cut -d ':' -f 2)
+  VERSION=${HASH:0:11}
+
+  run docker tag container $1:latest
+  run docker tag container $1:$VERSION
+}
