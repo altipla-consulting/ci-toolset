@@ -36,4 +36,7 @@ func docker-build-autotag {
 
   run docker tag container $1:latest
   run docker tag container $1:$VERSION
+
+  run docker push $1:latest
+  run docker push $1:$VERSION
 }
