@@ -10,12 +10,12 @@ class CI implements Serializable {
   int buildsToKeep = 10
   
   private def script
-  private def params = []
+  private List params = []
   private def tag = null
-  private def _gerritProject = ''
-  private def _gerritOnMerge = false
+  private String _gerritProject = ''
+  private boolean _gerritOnMerge = false
   
-  private def _gcloudConfigured = false
+  private boolean _gcloudConfigured = false
 
   def init(scriptRef) {
     script = scriptRef
@@ -140,7 +140,7 @@ class CI implements Serializable {
   def containerAutoTag(String name, String context='.', String dockerfile='Dockerfile') {
     def c = script.docker.build "${project}/${name}", "-f ${context}/${dockerfile} ${context}"
     script.docker.withRegistry('https://eu.gcr.io', '35e93828-31ad-45fd-90a3-21a3c9dcf332') {
-      String imageTag = script.sh(script: "docker image inspect c.id -f {{.Id}}", returnStdout: true);
+      String imageTag = script.sh(script: "docker image inspect ${c.id} -f {{.Id}}", returnStdout: true);
       imageTag = imageTag.trim().split(':')[1].substring(0, 12);
 
       c.push imageTag
