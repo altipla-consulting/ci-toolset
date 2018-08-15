@@ -28,7 +28,7 @@ function configure-google-cloud {
 }
 
 
-func docker-build-autotag {
+function docker-build-autotag {
   run docker build -t container -f $2 $3
   
   HASH=$(docker image inspect container -f '{{.Id}}' | cut -d ':' -f 2)
