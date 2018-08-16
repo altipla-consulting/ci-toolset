@@ -25,6 +25,8 @@ function configure-google-cloud {
     run gcloud config set compute/zone $GOOGLE_ZONE
     run gcloud container clusters get-credentials $GOOGLE_CLUSTER
   fi
+  
+  run gcloud auth configure-docker
 }
 
 
