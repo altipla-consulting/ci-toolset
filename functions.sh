@@ -5,7 +5,7 @@ set -eu
 
 function run {
   echo
-  echo "+ $1"
+  echo " ✗ $1"
   bash -c "$1"
 }
 
