@@ -42,3 +42,11 @@ function docker-build-autotag {
   run "docker push $1:latest"
   run "docker push $1:$VERSION"
 }
+
+
+function git-tag {
+  TAG=$(date +%Y%m%d).$BUILD_NUMBER
+
+  run "git tag -f $TAG"
+  run "git push --force origin refs/tags/$TAG:refs/tags/$TAG"
+}
