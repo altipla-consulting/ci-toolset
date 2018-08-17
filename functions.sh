@@ -45,7 +45,11 @@ function docker-build-autotag {
 
 
 function git-tag {
-  TAG=${1:-}$(date +%Y%m%d).$BUILD_NUMBER
+  PREFIX=${1:-}
+  if [ ! -z $PREFIX ]; then
+    PREFIX="${PREFIX}-"
+  fi
+  TAG=$PREFIX$(date +%Y%m%d).$BUILD_NUMBER
 
   run "git tag -f $TAG"
   run "git push --force origin refs/tags/$TAG:refs/tags/$TAG"
