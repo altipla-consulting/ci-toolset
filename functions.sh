@@ -20,7 +20,7 @@ function configure-google-cloud {
 
   run "gcloud config set core/project $GOOGLE_PROJECT"
   run "gcloud config set core/disable_prompts True"
-  if [ ! -n ${GOOGLE_CLUSTER-} ] && [ ! -n ${GOOGLE_ZONE-} ]; then
+  if [ ! -z ${GOOGLE_CLUSTER-} ] && [ ! -z ${GOOGLE_ZONE-} ]; then
     run "gcloud config set container/cluster $GOOGLE_CLUSTER"
     run "gcloud config set compute/zone $GOOGLE_ZONE"
     run "gcloud container clusters get-credentials $GOOGLE_CLUSTER"
