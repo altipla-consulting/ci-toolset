@@ -59,3 +59,8 @@ function git-tag {
   run "git tag -f $TAG"
   run "git push --force origin refs/tags/$TAG:refs/tags/$TAG"
 }
+
+
+function image-tag {
+  docker image inspect eu.gcr.io/$1 -f '{{.Id}}' | awk '{ split($0,a,":"); print substr(a[2], 1, 12) }'
+}
