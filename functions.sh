@@ -10,7 +10,7 @@ function run {
 }
 
 
-function actools {
+function run-actools {
   run "actools ${1}"
 }
 
