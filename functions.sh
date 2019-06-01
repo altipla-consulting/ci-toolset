@@ -10,11 +10,6 @@ function run {
 }
 
 
-function run-actools {
-  run "actools ${1}"
-}
-
-
 function configure-google-cloud {
   PATH=/root/google-cloud-sdk/bin:$PATH
 
