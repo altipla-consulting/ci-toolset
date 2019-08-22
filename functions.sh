@@ -20,6 +20,7 @@ function configure-google-cloud {
 
   run "gcloud config set core/project $GOOGLE_PROJECT"
   run "gcloud config set core/disable_prompts True"
+  run "gcloud config set run/platform managed"
   
   if [ ! -z ${GOOGLE_REGION-} ]; then
     run "gcloud config set run/region $GOOGLE_REGION"
